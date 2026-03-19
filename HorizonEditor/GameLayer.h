@@ -77,6 +77,7 @@ class GameLayer : public Layer
     std::shared_ptr<Shader> mShader;
     float mAspectRatio{0.0f};
     bool mRightMouseButtonPressed{false};
+    bool mShowDemoWindow{false};
 
     std::unordered_set<std::filesystem::path> mTextureFilePaths;
     std::unordered_set<std::filesystem::path> mShaderFilePaths;

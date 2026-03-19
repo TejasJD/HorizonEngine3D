@@ -66,7 +66,36 @@ auto GameLayer::RenderImGui() -> void
 {
     static std::optional<std::filesystem::path> filePathOpt;
 
-    ImGui::Begin("Textures");
+    ImGui::Begin("Toggle demo window");
+    if (ImGui::Button("Demo window"))
+    {
+        mShowDemoWindow ^= true;
+    }
+    ImGui::End();
+
+    if (mShowDemoWindow)
+    {
+        ImGui::ShowDemoWindow(&mShowDemoWindow);
+    }
+
+    ImGui::Begin("Camera transform");
+    if (ImGui::BeginTable("Camera transform", 3))
+    {
+        for (auto const &data : {cameraController->GetCamera().Position(), cameraController->GetCamera().Direction()})
+        {
+            ImGui::TableNextRow();
+            for (uint32_t j = 0; j < 3; ++j)
+            {
+                ImGui::TableNextColumn();
+                ImGui::Text("%.2f", data[j]);
+            }
+        }
+
+        ImGui::EndTable();
+    }
+    ImGui::End();
+
+    ImGui::Begin("Textures", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
     if (ImGui::Button("Add texture file path"))
     {
@@ -88,7 +117,7 @@ auto GameLayer::RenderImGui() -> void
 
     ImGui::End();
 
-    ImGui::Begin("Shader file path");
+    ImGui::Begin("Shader file path", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
     if (ImGui::Button("Add shader file path"))
     {
