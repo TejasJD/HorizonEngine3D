@@ -2,14 +2,7 @@
 #define HORIZON_EDITOR_H
 
 #include "HorizonEngine/App.h"
-#include "HorizonEngine/Camera.h"
-#include "HorizonEngine/CameraController.h"
 #include "HorizonEngine/Input.h"
-#include "HorizonEngine/Shader.h"
-#include "HorizonEngine/Texture.h"
-#include "HorizonEngine/VertexArray.h"
-
-#include <optional>
 
 #include <glm/glm.hpp>
 

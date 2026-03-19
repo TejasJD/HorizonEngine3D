@@ -777,3 +777,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Ignore compile_commands.json if generated in the git root directory
+compile_commands.json

@@ -77,19 +77,24 @@ auto GameLayer::RenderImGui() -> void
     static std::optional<std::filesystem::path> filePathOpt;
 
     ImGui::Begin("Window");
-    if (ImGui::Button("Load file dialog"))
+
+    if (ImGui::Button("Load file path"))
     {
         filePathOpt = AppRef().PlatformRef().GetFilePathFromDialog();
     }
+    if (ImGui::Button("Clear file path"))
+    {
+        filePathOpt = std::nullopt;
+    }
 
-	if (filePathOpt.has_value())
-	{
-		ImGui::Text("FilePath: %s", filePathOpt->string().c_str());
-	}
-	else
-	{
-		ImGui::Text("No filepath loaded");
-	}
+    if (filePathOpt.has_value())
+    {
+        ImGui::Text("FilePath: %s", filePathOpt->string().c_str());
+    }
+    else
+    {
+        ImGui::Text("No filepath loaded");
+    }
 
     ImGui::End();
 }
@@ -206,22 +211,25 @@ auto GameLayer::AddInputBindings() -> void
             float xDir = xOffset - xPrev;
             float yDir = yOffset - yPrev;
 
+            float moveInXDirBy = glm::abs(xDir);
+            float moveInYDirBy = glm::abs(yDir);
+
             if (xDir > 0.0f)
             {
-                cameraController->LookRight(AppRef().DeltaTime(), glm::abs(xDir));
+                cameraController->LookRight(AppRef().DeltaTime(), moveInXDirBy);
             }
             else
             {
-                cameraController->LookLeft(AppRef().DeltaTime(), glm::abs(xDir));
+                cameraController->LookLeft(AppRef().DeltaTime(), moveInXDirBy);
             }
 
             if (yDir > 0.0f)
             {
-                cameraController->LookDown(AppRef().DeltaTime(), glm::abs(yDir));
+                cameraController->LookDown(AppRef().DeltaTime(), moveInYDirBy);
             }
             else
             {
-                cameraController->LookUp(AppRef().DeltaTime(), glm::abs(yDir));
+                cameraController->LookUp(AppRef().DeltaTime(), moveInYDirBy);
             }
         }
 
