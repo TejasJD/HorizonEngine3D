@@ -4,6 +4,7 @@
 #include "HorizonEngine/MouseCodes.h"
 #include "HorizonEngine/RendererAPI.h"
 
+#include <algorithm>
 #include <glm/ext/scalar_constants.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/epsilon.hpp>
@@ -63,38 +64,49 @@ auto GameLayer::OnUpdate() -> void
 
 auto GameLayer::RenderImGui() -> void
 {
-    if (ImGui::BeginMainMenuBar())
-    {
-        if (ImGui::BeginMenu("Matrices"))
-        {
-            ImGui::MenuItem("Camera");
-            ImGui::EndMenu();
-        }
-
-        ImGui::EndMainMenuBar();
-    }
-
     static std::optional<std::filesystem::path> filePathOpt;
 
-    ImGui::Begin("Window");
+    ImGui::Begin("Textures");
 
-    if (ImGui::Button("Load file path"))
+    if (ImGui::Button("Add texture file path"))
     {
-        filePathOpt = AppRef().PlatformRef().GetFilePathFromDialog();
-    }
-    if (ImGui::Button("Clear file path"))
-    {
-        filePathOpt = std::nullopt;
+        auto filePathOpt = AppRef().PlatformRef().GetFilePathFromDialog();
+
+        if (filePathOpt.has_value())
+        {
+            mTextureFilePaths.insert(filePathOpt.value());
+        }
     }
 
-    if (filePathOpt.has_value())
+    if (ImGui::Button("Clear all textures"))
     {
-        ImGui::Text("FilePath: %s", filePathOpt->string().c_str());
+        mTextureFilePaths.clear();
     }
-    else
+
+    std::for_each(mTextureFilePaths.begin(), mTextureFilePaths.end(),
+                  [](auto const &filePath) { ImGui::Text("%s", filePath.string().c_str()); });
+
+    ImGui::End();
+
+    ImGui::Begin("Shader file path");
+
+    if (ImGui::Button("Add shader file path"))
     {
-        ImGui::Text("No filepath loaded");
+        auto filePathOpt = AppRef().PlatformRef().GetFilePathFromDialog();
+
+        if (filePathOpt.has_value())
+        {
+            mShaderFilePaths.insert(filePathOpt.value());
+        }
     }
+
+    if (ImGui::Button("Clear all textures"))
+    {
+        mShaderFilePaths.clear();
+    }
+
+    std::for_each(mShaderFilePaths.begin(), mShaderFilePaths.end(),
+                  [](auto const &filePath) { ImGui::Text("%s", filePath.string().c_str()); });
 
     ImGui::End();
 }
