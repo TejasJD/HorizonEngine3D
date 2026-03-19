@@ -1,13 +1,59 @@
-﻿# CMakeList.txt : CMake project for HorizonEngine, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿set(HORIZON_ENGINE_SRC_FILES
+	"src/App.cpp"
+	"src/Window.cpp"
+	"src/Buffer.cpp"
+	"src/RendererAPI.cpp"
+	"src/Shader.cpp"
+	"src/Utility.cpp"
+	"src/VertexArray.cpp"
+	"src/Texture.cpp"
+  "src/Input.cpp"
+	"src/Platform/WindowsOS.cpp"
+) 
 
-# Add source to this project's executable.
-add_executable (HorizonEngine "HorizonEngine.cpp" "HorizonEngine.h")
+set(HORIZON_ENGINE_HDR_FILES
+	"include/HorizonEngine/App.h"
+	"include/HorizonEngine/Buffer.h"
+	"include/HorizonEngine/RendererAPI.h"
+	"include/HorizonEngine/Utility.h"
+	"include/HorizonEngine/VertexArray.h"
+	"include/HorizonEngine/Window.h"
+	"include/HorizonEngine/Shader.h"
+	"include/HorizonEngine/Texture.h"
+	"include/HorizonEngine/Input.h"
+	"include/HorizonEngine/KeyCodes.h"
+	"include/HorizonEngine/MouseCodes.h"
+	"include/HorizonEngine/Camera.h"
+	"include/HorizonEngine/CameraController.h"
+	"include/HorizonEngine/Layer.h"
+	"include/HorizonEngine/Platform.h"
+	"src/Platform/WindowsOS.h"
+)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET HorizonEngine PROPERTY CXX_STANDARD 20)
-endif()
+add_library(HorizonEngine ${HORIZON_ENGINE_SRC_FILES} ${HORIZON_ENGINE_HDR_FILES})
 
-# TODO: Add tests and install targets if needed.
+set_property(TARGET HorizonEngine PROPERTY CXX_STANDARD 20)
+target_include_directories(HorizonEngine
+	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+find_package(imgui CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED) 
+find_package(Stb REQUIRED)
+
+set(HORIZON_PUBLIC_EXT_DEPS
+	glm::glm-header-only
+	spdlog::spdlog_header_only
+	imgui::imgui
+)
+
+set(HORIZON_PRIVATE_EXT_DEPS
+	glfw
+	glad::glad
+)
+
+target_link_libraries(HorizonEngine PUBLIC ${HORIZON_PUBLIC_EXT_DEPS})
+target_link_libraries(HorizonEngine PRIVATE ${HORIZON_PRIVATE_EXT_DEPS})
+target_include_directories(HorizonEngine PRIVATE ${Stb_INCLUDE_DIR})
