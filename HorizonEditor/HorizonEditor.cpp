@@ -8,14 +8,14 @@
 
 #include <spdlog/spdlog.h>
 
-namespace Hzn
+namespace HznEditor
 {
 
-auto HorizonEditor::Initialize() -> bool
+auto EditorApp::Initialize() -> bool
 {
     SPDLOG_INFO("HorizonEditor::{}", __func__);
 
-    auto gameLayer = Layer::Create<GameLayer>();
+    auto gameLayer = Hzn::Layer::Create<HznEditor::GameLayer>();
 
     if (!AddLayer(gameLayer))
     {
@@ -25,9 +25,9 @@ auto HorizonEditor::Initialize() -> bool
     return true;
 }
 
-HorizonEditor::~HorizonEditor()
+EditorApp::~EditorApp()
 {
     SPDLOG_INFO("HorizonEditor::{}", __func__);
 }
 
-} // namespace Hzn
+} // namespace HznEditor

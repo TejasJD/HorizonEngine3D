@@ -6,17 +6,16 @@
 
 #include <glm/glm.hpp>
 
-namespace Hzn
+namespace HznEditor
 {
 
-class HorizonEditor : public App
+class EditorApp : public Hzn::App
 {
   public:
     auto Initialize() -> bool override;
-
-    virtual ~HorizonEditor();
+    virtual ~EditorApp();
 };
 
-} // namespace Hzn
+} // namespace HznEditor
 
 #endif // HORIZON_EDITOR_H

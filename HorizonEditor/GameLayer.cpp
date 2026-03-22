@@ -1,18 +1,23 @@
 #include "GameLayer.h"
 
+#include "AssetUITool.h"
+#include "EditorUI.h"
+
 #include "HorizonEngine/KeyCodes.h"
 #include "HorizonEngine/MouseCodes.h"
 #include "HorizonEngine/RendererAPI.h"
 
-#include <algorithm>
 #include <glm/ext/scalar_constants.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/epsilon.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
+#include <optional>
 #include <spdlog/spdlog.h>
 
-namespace Hzn
+using namespace Hzn;
+
+namespace HznEditor
 {
 
 auto GameLayer::OnAdd() -> bool
@@ -45,6 +50,13 @@ auto GameLayer::OnAdd() -> bool
 
     AddInputBindings();
 
+    mEditorUI.emplace(*this);
+
+    mEditorUI->CreateMainMenuItem("Tools");
+    mEditorUI->CreateMainMenuItem("Settings");
+
+    mEditorUI->CreateUITool<AssetUITool>("Assets", "Tools");
+
     return true;
 }
 
@@ -64,80 +76,10 @@ auto GameLayer::OnUpdate() -> void
 
 auto GameLayer::RenderImGui() -> void
 {
-    static std::optional<std::filesystem::path> filePathOpt;
+    assert(mEditorUI.has_value());
+    mEditorUI->Render();
 
-    ImGui::Begin("Toggle demo window");
-    if (ImGui::Button("Demo window"))
-    {
-        mShowDemoWindow ^= true;
-    }
-    ImGui::End();
-
-    if (mShowDemoWindow)
-    {
-        ImGui::ShowDemoWindow(&mShowDemoWindow);
-    }
-
-    ImGui::Begin("Camera transform");
-    if (ImGui::BeginTable("Camera transform", 3))
-    {
-        for (auto const &data : {cameraController->GetCamera().Position(), cameraController->GetCamera().Direction()})
-        {
-            ImGui::TableNextRow();
-            for (uint32_t j = 0; j < 3; ++j)
-            {
-                ImGui::TableNextColumn();
-                ImGui::Text("%.2f", data[j]);
-            }
-        }
-
-        ImGui::EndTable();
-    }
-    ImGui::End();
-
-    ImGui::Begin("Textures", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-
-    if (ImGui::Button("Add texture file path"))
-    {
-        auto filePathOpt = AppRef().PlatformRef().GetFilePathFromDialog();
-
-        if (filePathOpt.has_value())
-        {
-            mTextureFilePaths.insert(filePathOpt.value());
-        }
-    }
-
-    if (ImGui::Button("Clear all textures"))
-    {
-        mTextureFilePaths.clear();
-    }
-
-    std::for_each(mTextureFilePaths.begin(), mTextureFilePaths.end(),
-                  [](auto const &filePath) { ImGui::Text("%s", filePath.string().c_str()); });
-
-    ImGui::End();
-
-    ImGui::Begin("Shader file path", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-
-    if (ImGui::Button("Add shader file path"))
-    {
-        auto filePathOpt = AppRef().PlatformRef().GetFilePathFromDialog();
-
-        if (filePathOpt.has_value())
-        {
-            mShaderFilePaths.insert(filePathOpt.value());
-        }
-    }
-
-    if (ImGui::Button("Clear all textures"))
-    {
-        mShaderFilePaths.clear();
-    }
-
-    std::for_each(mShaderFilePaths.begin(), mShaderFilePaths.end(),
-                  [](auto const &filePath) { ImGui::Text("%s", filePath.string().c_str()); });
-
-    ImGui::End();
+    ImGui::ShowDemoWindow();
 }
 
 auto GameLayer::OnRemove() -> void
@@ -279,4 +221,4 @@ auto GameLayer::AddInputBindings() -> void
     });
 }
 
-} // namespace Hzn
+} // namespace HznEditor

@@ -1,10 +1,16 @@
 set(HORIZON_EDITOR_SRC_FILES
+	"AssetUITool.cpp"
+	"EditorMenu.cpp"
+	"EditorUI.cpp"
 	"Entrypoint.cpp"
 	"HorizonEditor.cpp"
 	"GameLayer.cpp"
 )
 
 set(HORIZON_EDITOR_HDR_FILES
+	"AssetUITool.h"
+	"EditorUI.h"
+	"EditorUITool.h"
 	"HorizonEditor.h"
 	"GameLayer.h"
 )
