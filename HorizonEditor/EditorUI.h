@@ -15,12 +15,6 @@ namespace HznEditor
 class EditorUI
 {
   public:
-    explicit EditorUI(Hzn::Layer &layer) : mLayer(layer)
-    {
-    }
-
-    ~EditorUI() = default;
-
     void Render();
 
     void CreateMainMenuItem(std::string_view const &menuLabel)
@@ -31,10 +25,11 @@ class EditorUI
             SPDLOG_WARN("Main menu item already exists. Name: {}", menuLabel);
             return;
         }
-        mMainMenus.emplace_back(mLayer, menuLabel);
+        mMainMenus.emplace_back(menuLabel);
     }
 
-    template <UIToolConcept ToolType> void CreateUITool(std::string_view const &toolName, std::string_view const &menuLabel)
+    template <UIToolConcept ToolType, typename... Args>
+    void CreateUITool(std::string_view const &toolName, std::string_view const &menuLabel, Args &&...args)
     {
         auto menuIter = std::find_if(mMainMenus.begin(), mMainMenus.end(),
                                      [&menuLabel](auto const &mainMenu) { return mainMenu.Name() == menuLabel; });
@@ -44,8 +39,8 @@ class EditorUI
             return;
         }
 
-        mUITools.emplace_back(
-            std::make_shared<UIToolVariant>(std::in_place_type<ToolType>, mLayer, *menuIter, toolName));
+        mUITools.emplace_back(std::make_shared<UIToolVariant>(std::in_place_type<ToolType>, *menuIter, toolName,
+                                                              std::forward<Args>(args)...));
         menuIter->AddUIToolReference(mUITools.back());
     }
 
@@ -53,7 +48,6 @@ class EditorUI
     void RenderMainMenuBar();
     void RenderActiveTools();
 
-    Hzn::Layer &mLayer;
     std::vector<EditorMenu> mMainMenus;
     std::vector<std::shared_ptr<UIToolVariant>> mUITools;
 };

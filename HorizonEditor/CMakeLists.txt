@@ -3,16 +3,17 @@ set(HORIZON_EDITOR_SRC_FILES
 	"EditorMenu.cpp"
 	"EditorUI.cpp"
 	"Entrypoint.cpp"
-	"HorizonEditor.cpp"
 	"GameLayer.cpp"
+	"HorizonEditor.cpp"
 )
 
 set(HORIZON_EDITOR_HDR_FILES
 	"AssetUITool.h"
 	"EditorUI.h"
 	"EditorUITool.h"
-	"HorizonEditor.h"
 	"GameLayer.h"
+	"HorizonEditor.h"
+	"ImGuiDemoWindowTool.h"
 )
 
 add_executable(HorizonEditor ${HORIZON_EDITOR_SRC_FILES} ${HORIZON_EDITOR_HDR_FILES}) 

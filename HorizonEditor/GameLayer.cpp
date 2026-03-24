@@ -6,6 +6,7 @@
 #include "HorizonEngine/KeyCodes.h"
 #include "HorizonEngine/MouseCodes.h"
 #include "HorizonEngine/RendererAPI.h"
+#include "ImGuiDemoWindowTool.h"
 
 #include <glm/ext/scalar_constants.hpp>
 #include <glm/glm.hpp>
@@ -50,13 +51,12 @@ auto GameLayer::OnAdd() -> bool
 
     AddInputBindings();
 
-    mEditorUI.emplace(*this);
-
+    mEditorUI = std::make_optional<EditorUI>();
     mEditorUI->CreateMainMenuItem("Tools");
     mEditorUI->CreateMainMenuItem("Settings");
 
     mEditorUI->CreateUITool<AssetUITool>("Assets", "Tools");
-
+    mEditorUI->CreateUITool<ImGuiDemoWindowTool>("Demo Window", "Settings");
     return true;
 }
 
@@ -78,8 +78,6 @@ auto GameLayer::RenderImGui() -> void
 {
     assert(mEditorUI.has_value());
     mEditorUI->Render();
-
-    ImGui::ShowDemoWindow();
 }
 
 auto GameLayer::OnRemove() -> void

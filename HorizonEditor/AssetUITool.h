@@ -9,8 +9,7 @@ namespace HznEditor
 class AssetUITool : public UIToolBase
 {
   public:
-    AssetUITool(Hzn::Layer &layer, EditorMenu const &owningMenuItem, std::string_view const &name)
-        : UIToolBase(layer, owningMenuItem, name)
+    AssetUITool(EditorMenu const &owningMenuItem, std::string_view const &name) : UIToolBase(owningMenuItem, name)
     {
     }
 

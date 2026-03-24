@@ -21,8 +21,8 @@ concept UIToolConcept = requires(T t, bool value) {
 class UIToolBase
 {
   public:
-    UIToolBase(Hzn::Layer &layer, EditorMenu const &owningMenuItem, std::string_view const &name)
-        : mLayer(layer), mOwningMenuItem(owningMenuItem), mName(name)
+    UIToolBase(EditorMenu const &owningMenuItem, std::string_view const &name)
+        : mOwningMenuItem(owningMenuItem), mName(name)
     {
     }
 
@@ -42,7 +42,6 @@ class UIToolBase
     }
 
   protected:
-    Hzn::Layer &mLayer;
     EditorMenu const &mOwningMenuItem;
     std::string_view mName;
     bool mShow{false};

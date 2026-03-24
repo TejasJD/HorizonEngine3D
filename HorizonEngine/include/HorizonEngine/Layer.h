@@ -26,7 +26,6 @@ class Layer
 
     virtual ~Layer() = default;
 
-  protected:
     auto AppRef() -> App &
     {
         return *mApp;

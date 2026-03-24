@@ -16,7 +16,7 @@ namespace HznEditor
 class EditorMenu
 {
   public:
-    explicit EditorMenu(Hzn::Layer &layer, std::string_view const &name) : mName(name), mOwningLayer(layer)
+    explicit EditorMenu(std::string_view const &name) : mName(name)
     {
     }
 
@@ -35,7 +35,6 @@ class EditorMenu
     void Render() const;
 
   private:
-    Hzn::Layer &mOwningLayer;
     std::string_view mName;
     std::vector<std::weak_ptr<UIToolVariant>> mUITools;
 };
