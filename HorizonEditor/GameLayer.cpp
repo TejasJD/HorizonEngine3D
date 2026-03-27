@@ -1,6 +1,7 @@
 #include "GameLayer.h"
 
 #include "AssetUITool.h"
+#include "EditorCameraTool.h"
 #include "EditorUI.h"
 
 #include "HorizonEngine/KeyCodes.h"
@@ -25,7 +26,8 @@ auto GameLayer::OnAdd() -> bool
 {
     SPDLOG_INFO("GameLayer::{}", __func__);
     mAspectRatio = AppRef().WindowRef().AspectRatio();
-    cameraController = CameraController<PerspectiveCamera>{PerspectiveCamera{{0.0f, 0.0f, 1.0f}, mAspectRatio}, 1.0f};
+    cameraController =
+        CameraController<PerspectiveCamera>{PerspectiveCamera{{0.0f, 0.0f, 1.0f}, mAspectRatio}, 1.0f, 50.0f};
 
     mVertexArray = VertexArray::Create();
     assert(!!mVertexArray);
@@ -57,6 +59,9 @@ auto GameLayer::OnAdd() -> bool
 
     mEditorUI->CreateUITool<AssetUITool>("Assets", "Tools");
     mEditorUI->CreateUITool<ImGuiDemoWindowTool>("Demo Window", "Settings");
+
+    mEditorUI->CreateUITool<EditorCameraTool>("Editor Camera", "Settings", cameraController.value());
+
     return true;
 }
 
@@ -83,6 +88,7 @@ auto GameLayer::RenderImGui() -> void
 auto GameLayer::OnRemove() -> void
 {
     SPDLOG_INFO("GameLayer::{}", __func__);
+    mEditorUI.reset();
 }
 
 auto GameLayer::AddInputBindings() -> void

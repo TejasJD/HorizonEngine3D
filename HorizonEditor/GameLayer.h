@@ -78,6 +78,7 @@ class GameLayer : public Hzn::Layer
     std::optional<Hzn::CameraController<Hzn::PerspectiveCamera>> cameraController;
     std::shared_ptr<Hzn::VertexArray> mVertexArray;
     std::shared_ptr<Hzn::Shader> mShader;
+
     float mAspectRatio{0.0f};
     bool mRightMouseButtonPressed{false};
     bool mShowDemoWindow{false};

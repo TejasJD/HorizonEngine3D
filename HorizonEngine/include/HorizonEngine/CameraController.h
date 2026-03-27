@@ -23,7 +23,8 @@ template <typename Camera>
 class CameraController
 {
   public:
-    CameraController(Camera const &camera, float const speed) : mCamera(camera), mSpeed(speed)
+    CameraController(Camera const &camera, float const translationSpeed, float const rotationSpeed)
+        : mCamera(camera), mTranslationSpeed(translationSpeed), mRotationSpeed(rotationSpeed)
     {
     }
 
@@ -32,16 +33,41 @@ class CameraController
         return mCamera;
     }
 
+    auto GetTranslationSpeed() -> float
+    {
+        return mTranslationSpeed;
+    }
+
+    auto SetTranslationSpeed(float const speed)
+    {
+        mTranslationSpeed = speed;
+    }
+
+    auto GetRotationSpeed() -> float
+    {
+        return mRotationSpeed;
+    }
+
+    auto SetRotationSpeed(float const speed)
+    {
+        mRotationSpeed = speed;
+    }
+
+    auto GetEulerAngles() -> glm::vec3 const &
+    {
+        return mEulerAngle;
+    }
+
     auto MoveUp(float deltaTime) -> void
     {
-        float const speed = mSpeed * deltaTime;
+        float const speed = mTranslationSpeed * deltaTime;
         glm::vec3 newPosition = mCamera.Position() + glm::vec3{0.0f, speed, 0.0f};
         mCamera.SetPosition(newPosition);
     }
 
     auto MoveDown(float deltaTime) -> void
     {
-        float const speed = mSpeed * deltaTime;
+        float const speed = mTranslationSpeed * deltaTime;
         glm::vec3 newPosition = mCamera.Position() - glm::vec3{0.0f, speed, 0.0f};
         mCamera.SetPosition(newPosition);
     }
@@ -50,14 +76,14 @@ class CameraController
     {
         if constexpr (IsOrthographicCamera<Camera>)
         {
-            float const speed = mSpeed * deltaTime;
+            float const speed = mTranslationSpeed * deltaTime;
             glm::vec3 newPosition = mCamera.Position() - glm::vec3{speed, 0.0f, 0.0f};
             mCamera.SetPosition(newPosition);
         }
 
         if constexpr (IsPerspectiveCamera<Camera>)
         {
-            float const speed = mSpeed * deltaTime;
+            float const speed = mTranslationSpeed * deltaTime;
             glm::vec3 const direction =
                 speed * glm::normalize(glm::cross(glm::vec3{0.0f, 1.0f, 0.0f}, mCamera.Direction()));
             glm::vec3 newPosition = mCamera.Position() + direction;
@@ -69,14 +95,14 @@ class CameraController
     {
         if constexpr (IsOrthographicCamera<Camera>)
         {
-            float const speed = mSpeed * deltaTime;
+            float const speed = mTranslationSpeed * deltaTime;
             glm::vec3 newPosition = mCamera.Position() + glm::vec3{speed, 0.0f, 0.0f};
             mCamera.SetPosition(newPosition);
         }
 
         if constexpr (IsPerspectiveCamera<Camera>)
         {
-            float const speed = mSpeed * deltaTime;
+            float const speed = mTranslationSpeed * deltaTime;
             glm::vec3 const direction =
                 speed * glm::normalize(glm::cross(mCamera.Direction(), glm::vec3{0.0f, 1.0f, 0.0f}));
             glm::vec3 newPosition = mCamera.Position() + direction;
@@ -87,21 +113,21 @@ class CameraController
     auto MoveForward(float deltaTime) -> void
         requires IsPerspectiveCamera<Camera>
     {
-        auto newPosition = mCamera.Position() + (mSpeed * deltaTime * glm::normalize(mCamera.Direction()));
+        auto newPosition = mCamera.Position() + (mTranslationSpeed * deltaTime * glm::normalize(mCamera.Direction()));
         mCamera.SetPosition(newPosition);
     }
 
     auto MoveBack(float deltaTime) -> void
         requires IsPerspectiveCamera<Camera>
     {
-        auto newPosition = mCamera.Position() - (mSpeed * deltaTime * glm::normalize(mCamera.Direction()));
+        auto newPosition = mCamera.Position() - (mTranslationSpeed * deltaTime * glm::normalize(mCamera.Direction()));
         mCamera.SetPosition(newPosition);
     }
 
     auto LookUp(float deltaTime, float deltaMovement) -> void
         requires IsPerspectiveCamera<Camera>
     {
-        float const speed = deltaMovement * deltaTime * 50.0f;
+        float const speed = deltaMovement * deltaTime * mRotationSpeed;
         if (mEulerAngle.x + speed < 89.0f)
         {
             mEulerAngle.x += speed;
@@ -112,7 +138,7 @@ class CameraController
     auto LookDown(float deltaTime, float deltaMovement) -> void
         requires IsPerspectiveCamera<Camera>
     {
-        float const speed = deltaMovement * deltaTime * 50.0f;
+        float const speed = deltaMovement * deltaTime * mRotationSpeed;
         if (mEulerAngle.x - speed > -89.0f)
         {
             mEulerAngle.x -= speed;
@@ -124,7 +150,7 @@ class CameraController
     auto LookLeft(float deltaTime, float deltaMovement) -> void
         requires IsPerspectiveCamera<Camera>
     {
-        float const speed = deltaMovement * deltaTime * 50.0f;
+        float const speed = deltaMovement * deltaTime * mRotationSpeed;
         if (mEulerAngle.y + speed > 180.0f)
         {
             mEulerAngle.y = -180.0f;
@@ -136,7 +162,7 @@ class CameraController
     auto LookRight(float deltaTime, float deltaMovement) -> void
         requires IsPerspectiveCamera<Camera>
     {
-        float const speed = deltaMovement * deltaTime * 50.0f;
+        float const speed = deltaMovement * deltaTime * mRotationSpeed;
         if (mEulerAngle.y - speed < -180.0f)
         {
             mEulerAngle.y = 180.0f;
@@ -155,8 +181,9 @@ class CameraController
     }
 
     Camera mCamera;
-    float mSpeed;
     glm::vec3 mEulerAngle{0.0f, 0.0f, 0.0f};
+    float mTranslationSpeed;
+    float mRotationSpeed;
 };
 
 } // namespace Hzn

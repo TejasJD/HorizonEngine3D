@@ -2,6 +2,7 @@
 #define HZN_EDITOR_VARIANT_H
 
 #include "AssetUITool.h"
+#include "EditorCameraTool.h"
 #include "ImGuiDemoWindowTool.h"
 
 #include <variant>
@@ -9,7 +10,7 @@
 namespace HznEditor
 {
 
-using UIToolVariant = std::variant<AssetUITool, ImGuiDemoWindowTool>;
+using UIToolVariant = std::variant<AssetUITool, ImGuiDemoWindowTool, EditorCameraTool>;
 
 }
 
