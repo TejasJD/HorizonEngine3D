@@ -61,10 +61,10 @@ void EditorCameraTool::Render()
     {
         mCurrentSettings.TranslationSpeed = mBaseSettings.TranslationSpeed;
         mCurrentSettings.RotationSpeed = mBaseSettings.RotationSpeed;
-
-        mController.SetRotationSpeed(mCurrentSettings.RotationSpeed);
-        mController.SetTranslationSpeed(mCurrentSettings.TranslationSpeed);
     }
+
+    mController.SetRotationSpeed(mCurrentSettings.RotationSpeed);
+    mController.SetTranslationSpeed(mCurrentSettings.TranslationSpeed);
 
     ImGui::End();
 }
